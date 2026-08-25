@@ -22,7 +22,7 @@ ffmpeg -version | head -1
 
 ## Create the env
 
-Install packages **one at a time**. A single multi-package `conda install …`
+Install packages **one at a time**. A single multi-package `conda install ...`
 solve often fails or hangs on older conda solvers.
 
 ```bash
@@ -75,7 +75,7 @@ gst-inspect-1.0 rtpmp2tpay | head -5
 gst-inspect-1.0 tsparse | head -5
 ```
 
-Both should print element details (not “No such element”).
+Both should print element details (not "No such element").
 
 ---
 
@@ -102,7 +102,7 @@ export SIM_PYTHON=$HOME/miniconda3/envs/rtsp-mpegts-lab/bin/python
 | `pip install PyGObject` | Needs matching system GStreamer / GI typelibs; fragile across distros |
 | **conda-forge** | Ships Python, GI, and GStreamer plugins together |
 
-`requirements.txt` in this repo is intentionally minimal — the real deps are
+`requirements.txt` in this repo is intentionally minimal - the real deps are
 conda packages above.
 
 ---
@@ -115,5 +115,5 @@ conda packages above.
 | `No such element: rtpmp2tpay` | Install `gst-plugins-bad` |
 | `No such element: tsparse` | Install `gst-plugins-bad` (mpegtsparse / tsparse) |
 | Solver hangs on one big install | Install packages **sequentially** as above |
-| Wrong Python used by scripts | `export SIM_PYTHON=…/envs/rtsp-mpegts-lab/bin/python` |
-| Conda in a non-default prefix | Set `SIM_PYTHON` to that env’s `bin/python` |
+| Wrong Python used by scripts | `export SIM_PYTHON=.../envs/rtsp-mpegts-lab/bin/python` |
+| Conda in a non-default prefix | Set `SIM_PYTHON` to that env's `bin/python` |
