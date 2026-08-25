@@ -23,3 +23,7 @@ __pycache__/
 # Temporary FIFO / sim state
 /tmp/
 rtsp-mpegts-*/
+
+# MediaMTX auto-generated TLS when started from the lab root
+/auto.crt
+/auto.key

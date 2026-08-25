@@ -49,7 +49,7 @@ MPEG-TS (MP2T) track:
 
 1. RTSP client receives RTP PT=33 packets
 2. Payload bytes are fed into an MPEG-TS demuxer (`mpegts.ToStream`)
-3. Internal stream is rebuilt with **elementary tracks** (typically `H264`)
+3. Internal stream is rebuilt with **elementary tracks** (H264, and KLV when the TS has PES)
 4. HLS / WebRTC / recording can attach as usual
 
 ```text

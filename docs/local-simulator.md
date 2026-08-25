@@ -9,7 +9,7 @@ test `rtspDemuxMpegts` without an upstream encoder.
   video_with_klv.ts
          |
          v
-  ffmpeg -re -stream_loop -1   <- realtime pace + infinite loop
+  ffmpeg -re -stream_loop -1 -map 0   <- realtime pace, loop, keep KLV
          |
          v
       FIFO (mpegts)
@@ -50,7 +50,7 @@ export SIM_PYTHON=$HOME/miniconda3/envs/rtsp-mpegts-lab/bin/python
 # Terminal 2 - MediaMTX
 export MEDIAMTX_BIN=../mediamtx/mediamtx                   # patched binary
 ./scripts/start_mediamtx.sh
-# log: MPEG-TS demux mode enabled -> ready H264
+# log: MPEG-TS demux mode enabled -> ready H264 (KLV if the TS has PES)
 
 # Terminal 3 - checks
 ./scripts/check.sh

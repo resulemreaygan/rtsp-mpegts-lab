@@ -25,6 +25,7 @@ curl -s "$MTX_API/v3/paths/get/$PATH" | jq '{ready, tracks, bytesReceived}'
 | Result | Meaning |
 |--------|---------|
 | `ready=true`, `tracks` contains `H264` | Demux OK |
+| `tracks` also contains `KLV` | TS had real KLV PES (optional; HLS still uses video) |
 | `tracks: ["MPEG-TS"]` | Flag off or old binary |
 | `ready=false` | Source unreachable / auth / stuck pull |
 
@@ -46,7 +47,7 @@ Success:
 
 ```text
 [RTSP source] MPEG-TS demux mode enabled
-... ready: 1 track (H264)
+... ready: 1 track (H264)   # or 2 tracks (H264, KLV) when PES is present
 ... is converting into HLS ...
 ```
 
