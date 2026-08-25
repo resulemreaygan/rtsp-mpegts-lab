@@ -37,3 +37,4 @@ head -5 /tmp/mpegts_sim.m3u8 2>/dev/null || true
 
 echo
 echo "Success if: rtspDemuxMpegts=true, tracks has H264 (not only MPEG-TS), m3u8 HTTP 200"
+echo "Optional: tracks also lists KLV when the source TS has KLV PES packets"

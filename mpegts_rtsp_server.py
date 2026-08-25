@@ -39,8 +39,8 @@ def _env(*names: str, default: str) -> str:
 def main() -> int:
     """Serve an MPEG-TS file as a single RTSP MP2T track.
 
-    Paces the file with ffmpeg ``-re`` into a FIFO, then GstRtspServer payloads
-    it as ``rtpmp2tpay`` (PT=33). CLI flags fall back to ``SIM_TS_PATH``,
+    Paces the file with ffmpeg ``-re -map 0`` into a FIFO, then GstRtspServer
+    payloads it as ``rtpmp2tpay`` (PT=33). CLI flags fall back to ``SIM_TS_PATH``,
     ``SIM_RTSP_PORT``, and ``SIM_RTSP_MOUNT``.
 
     :returns: Process exit code (``0`` on success, ``1`` on setup failure).
@@ -99,6 +99,8 @@ def main() -> int:
         "-1",
         "-i",
         ts_path,
+        "-map",
+        "0",
         "-c",
         "copy",
         "-f",

@@ -6,6 +6,7 @@ archive/
 !samples/*.ts
 samples/video_only.ts
 samples/video_pmt_klv.ts
+samples/klv_pid.ts
 __pycache__/
 *.pyc
 .pytest_cache/
