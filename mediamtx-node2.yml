@@ -1,0 +1,56 @@
+###############################################
+# Optional dual-node LAB config - MediaMTX NODE 2
+# Open auth is for local LAN testing only. Do not use in production.
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+
+authMethod: internal
+authInternalUsers:
+- user: any
+  pass:
+  ips: []
+  permissions:
+  - action: publish
+  - action: read
+  - action: playback
+  - action: api
+  - action: metrics
+  - action: pprof
+
+api: yes
+apiAddress: :19997
+apiAllowOrigin: '*'
+
+rtsp: yes
+rtspAddress: :18554
+rtspTransports: [tcp, udp]
+
+rtmp: yes
+rtmpAddress: :11935
+
+hls: yes
+hlsAddress: :18888
+hlsAllowOrigin: '*'
+hlsAlwaysRemux: no
+hlsVariant: fmp4
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+
+webrtc: yes
+webrtcAddress: :18889
+webrtcLocalUDPAddress: :18189
+
+# Avoid RTP UDP clash with node1 (:8000/:8001)
+rtpAddress: :18000
+rtcpAddress: :18001
+
+playback: no
+srt: no
+
+pathDefaults:
+  rtspDemuxMpegts: true
+  rtspTransport: tcp
+
+paths: {}
