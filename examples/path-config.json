@@ -1,0 +1,6 @@
+{
+  "name": "demux-test",
+  "source": "rtsp://127.0.0.1:8555/mp2t",
+  "rtspTransport": "tcp",
+  "rtspDemuxMpegts": true
+}

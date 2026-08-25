@@ -1,0 +1,39 @@
+###############################################
+# Local PoC: pull RTSP MPEG-TS (MP2T) and demux
+# Requires patched MediaMTX (feat/rtsp-pull-mpegts-demux)
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+
+api: yes
+apiAddress: :9997
+# Allow lab HTML tools served from another local port (e.g. :8765)
+apiAllowOrigin: '*'
+
+rtsp: yes
+rtspAddress: :8554
+rtspTransports: [tcp, udp]
+
+hls: yes
+hlsAddress: :8888
+hlsAllowOrigin: '*'
+hlsAlwaysRemux: no
+hlsVariant: lowLatency
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+
+webrtc: no
+rtmp: no
+srt: no
+
+pathDefaults:
+  # unused for static source; kept for clarity
+  rtspDemuxMpegts: false
+
+paths:
+  # MTX pulls from local GStreamer RTSP (MP2T) and demuxes
+  mpegts_sim:
+    source: rtsp://127.0.0.1:8555/mp2t
+    rtspTransport: tcp
+    rtspDemuxMpegts: true

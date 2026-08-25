@@ -1,0 +1,12 @@
+# Minimal MediaMTX path example (patched build required).
+# Apply via API or merge under `paths:` in mediamtx.yml.
+
+pathDefaults:
+  rtspTransport: tcp
+
+paths:
+  demux-test:
+    source: rtsp://127.0.0.1:8555/mp2t
+    rtspTransport: tcp
+    # Demux RTP MPEG-TS (MP2T) into elementary tracks (H264, ...)
+    rtspDemuxMpegts: true
