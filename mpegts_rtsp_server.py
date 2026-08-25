@@ -52,7 +52,11 @@ def main() -> int:
     except Exception:
         pass
 
-    default_ts = os.path.expanduser("~/dummy-ts-work/video_with_klv.ts")
+    default_ts = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "samples",
+        "video_with_klv.ts",
+    )
     parser = argparse.ArgumentParser(
         description="RTSP server exposing one MPEG-TS (MP2T) track from a .ts file.",
     )

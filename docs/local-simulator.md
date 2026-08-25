@@ -42,7 +42,7 @@ Full install steps: [conda-setup.md](conda-setup.md) or `./scripts/setup_conda_e
 
 ```bash
 # Terminal 1 - RTSP source (auto-restart supervisor)
-export SIM_TS_PATH=$HOME/dummy-ts-work/video_with_klv.ts   # your .ts
+export SIM_TS_PATH=$PWD/samples/video_with_klv.ts   # default if unset
 export SIM_PYTHON=$HOME/miniconda3/envs/rtsp-mpegts-lab/bin/python
 ./scripts/start_rtsp_loop.sh
 # -> rtsp://127.0.0.1:8555/mp2t
@@ -60,7 +60,7 @@ export MEDIAMTX_BIN=../mediamtx/mediamtx                   # patched binary
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `SIM_TS_PATH` | `~/dummy-ts-work/video_with_klv.ts` | Input MPEG-TS (H264+KLV OK) |
+| `SIM_TS_PATH` | `samples/video_with_klv.ts` | Input MPEG-TS (H264+KLV OK) |
 | `SIM_RTSP_PORT` | `8555` | Simulator listen port |
 | `SIM_RTSP_MOUNT` | `/mp2t` | RTSP mount path |
 | `SIM_PYTHON` | `python3` | Interpreter with GI |

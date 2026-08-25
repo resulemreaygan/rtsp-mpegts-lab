@@ -44,7 +44,7 @@ trust the MediaMTX API `tracks` field**.
 | [docs/mediamtx-config.md](docs/mediamtx-config.md) | YAML / API flag |
 | [docs/verification.md](docs/verification.md) | Curl checklist and result matrix |
 | [docs/local-simulator.md](docs/local-simulator.md) | Lab RTSP server (ffmpeg -re + FIFO) |
-| [docs/create-dummy-ts.md](docs/create-dummy-ts.md) | Build `video_with_klv.ts` locally (not in git) |
+| [docs/create-dummy-ts.md](docs/create-dummy-ts.md) | Rebuild `samples/video_with_klv.ts` if needed |
 | [docs/conda-setup.md](docs/conda-setup.md) | Conda env for PyGObject / GStreamer RTSP |
 
 ---
@@ -75,14 +75,13 @@ After the upstream / fork PR is public, paste its URL into
 - Python 3 + PyGObject + GStreamer RTSP server plugins
   -> [docs/conda-setup.md](docs/conda-setup.md) or `./scripts/setup_conda_env.sh`
 - `ffmpeg` on `PATH`
-- An MPEG-TS file (H264; KLV optional), e.g. `~/dummy-ts-work/video_with_klv.ts`
-  (create with [docs/create-dummy-ts.md](docs/create-dummy-ts.md) - **do not commit** `.ts` files)
+- Dummy MPEG-TS in `samples/video_with_klv.ts` (H264 + dummy KLV; rebuild via
+  [docs/create-dummy-ts.md](docs/create-dummy-ts.md))
 
 ### Run
 
 ```bash
-# 1) MP2T RTSP source
-export SIM_TS_PATH=$HOME/dummy-ts-work/video_with_klv.ts
+# 1) MP2T RTSP source (defaults to samples/video_with_klv.ts)
 export SIM_PYTHON=/path/to/python   # with gi / GstRtspServer
 ./scripts/start_rtsp_loop.sh
 # listens on rtsp://127.0.0.1:8555/mp2t
@@ -142,6 +141,11 @@ Full checklist: [docs/verification.md](docs/verification.md).
 .
 |-- LICENSE
 |-- README.md
+|-- samples/
+|   |-- README.md
+|   |-- source.mp4             # 10s dummy clip (CC BY 3.0)
+|   |-- video_with_klv.ts      # H264 + dummy KLV MPEG-TS
+|   `-- dummy.klv
 |-- docs/
 |   |-- README.md
 |   |-- mediamtx-feature.md    # flag / branch / PR pointers
@@ -149,7 +153,7 @@ Full checklist: [docs/verification.md](docs/verification.md).
 |   |-- mediamtx-config.md
 |   |-- verification.md
 |   |-- local-simulator.md
-|   |-- create-dummy-ts.md     # how to build the sample .ts (not committed)
+|   |-- create-dummy-ts.md     # rebuild samples/video_with_klv.ts
 |   `-- conda-setup.md         # conda env for the RTSP simulator
 |-- examples/
 |   |-- mediamtx-path.yml

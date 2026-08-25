@@ -76,7 +76,7 @@ Verification steps: [verification.md](verification.md).
 
 You can treat this project as a plain **MP2T RTSP source + MediaMTX glue**:
 
-1. Build a `.ts` ([create-dummy-ts.md](create-dummy-ts.md))
+1. Use `samples/video_with_klv.ts` (or rebuild: [create-dummy-ts.md](create-dummy-ts.md))
 2. Run the RTSP sim ([local-simulator.md](local-simulator.md))
 3. Point any MediaMTX that supports `rtspDemuxMpegts` at that URL
 

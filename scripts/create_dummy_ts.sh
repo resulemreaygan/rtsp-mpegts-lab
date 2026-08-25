@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-# Build ~/dummy-ts-work/video_with_klv.ts (H264 + dummy KLV) from an input video.
+# Build samples/video_with_klv.ts (H264 + dummy KLV) from an input video.
 set -euo pipefail
 
-VIDEO="${1:-}"
-WORK="${DUMMY_TS_WORK:-$HOME/dummy-ts-work}"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+VIDEO="${1:-$ROOT/samples/source.mp4}"
+WORK="${DUMMY_TS_WORK:-$ROOT/samples}"
 TSDUCK_IMAGE="${TSDUCK_IMAGE:-miravallesg/tsduck:v3.21-1693}"
 
-if [[ -z "$VIDEO" || ! -f "$VIDEO" ]]; then
-  echo "Usage: $0 /path/to/input.mp4" >&2
-  echo "Writes: \$DUMMY_TS_WORK/video_with_klv.ts (default: ~/dummy-ts-work)" >&2
+if [[ ! -f "$VIDEO" ]]; then
+  echo "Usage: $0 [/path/to/input.mp4]" >&2
+  echo "Writes: \$DUMMY_TS_WORK/video_with_klv.ts (default: $ROOT/samples)" >&2
   exit 1
 fi
 

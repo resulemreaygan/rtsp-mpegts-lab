@@ -3,6 +3,9 @@ archive/
 *.log
 *.ts
 !examples/**/*.ts
+!samples/*.ts
+samples/video_only.ts
+samples/video_pmt_klv.ts
 __pycache__/
 *.pyc
 .pytest_cache/

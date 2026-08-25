@@ -1,8 +1,8 @@
 # Create a dummy MPEG-TS (H264 + optional KLV)
 
-The sample file used by the RTSP simulator (`video_with_klv.ts`) is **not** in
-this repository - MPEG-TS assets are large. Build one locally with the steps
-below, then point `SIM_TS_PATH` at the result.
+The lab ships a small dummy under [`samples/`](../samples/README.md)
+(`source.mp4`, `video_with_klv.ts`, `dummy.klv`). Rebuild it with the steps
+below if you change the source clip.
 
 Target profile for demux / HLS lab work:
 
@@ -40,8 +40,8 @@ Verified with FFmpeg 4.x and Docker image `miravallesg/tsduck:v3.21-1693`.
 If you only need video inside MPEG-TS (enough for `rtspDemuxMpegts` -> HLS):
 
 ```bash
-mkdir -p ~/dummy-ts-work && cd ~/dummy-ts-work
-ffmpeg -y -i /path/to/your.mp4 \
+cd samples
+ffmpeg -y -i source.mp4 \
   -c:v libx264 -profile:v main -pix_fmt yuv420p \
   -r 25 -g 50 -an \
   -f mpegts video_with_klv.ts
@@ -52,7 +52,7 @@ ffprobe -v error -show_entries stream=codec_type,codec_name -of csv=p=0 video_wi
 Then:
 
 ```bash
-export SIM_TS_PATH=$HOME/dummy-ts-work/video_with_klv.ts
+export SIM_TS_PATH=$PWD/samples/video_with_klv.ts
 ```
 
 ---
@@ -72,7 +72,7 @@ docker pull miravallesg/tsduck:v3.21-1693
 ### 1) Work directory
 
 ```bash
-mkdir -p ~/dummy-ts-work && cd ~/dummy-ts-work
+cd samples
 export TSDUCK="docker run --rm -v $(pwd):/work -w /work miravallesg/tsduck:v3.21-1693 tsp"
 $TSDUCK --version
 ```
@@ -80,7 +80,7 @@ $TSDUCK --version
 ### 2) Video-only MPEG-TS
 
 ```bash
-export VIDEO=/path/to/your.mp4
+export VIDEO=$PWD/samples/source.mp4
 
 ffmpeg -y -i "$VIDEO" \
   -c:v libx264 -profile:v main -pix_fmt yuv420p \
@@ -154,7 +154,7 @@ TSDuck pipeline ([tsduck#1230](https://github.com/tsduck/tsduck/issues/1230)).
 ### 6) Use with this repo's RTSP simulator
 
 ```bash
-export SIM_TS_PATH=$HOME/dummy-ts-work/video_with_klv.ts
+export SIM_TS_PATH=$PWD/samples/video_with_klv.ts
 ./scripts/start_rtsp_loop.sh
 # -> rtsp://127.0.0.1:8555/mp2t
 ```
@@ -166,8 +166,8 @@ See [local-simulator.md](local-simulator.md).
 ## One-shot script
 
 ```bash
-export VIDEO=/path/to/your.mp4
-export WORK=$HOME/dummy-ts-work
+export VIDEO=$PWD/samples/source.mp4
+export WORK=$PWD/samples
 
 mkdir -p "$WORK" && cd "$WORK"
 docker pull miravallesg/tsduck:v3.21-1693
@@ -196,7 +196,8 @@ echo "SIM_TS_PATH=$WORK/video_with_klv.ts"
 The same flow is wrapped in [scripts/create_dummy_ts.sh](../scripts/create_dummy_ts.sh):
 
 ```bash
-./scripts/create_dummy_ts.sh /path/to/your.mp4
+./scripts/create_dummy_ts.sh
+# or: ./scripts/create_dummy_ts.sh /path/to/your.mp4
 ```
 
 ---
@@ -208,12 +209,13 @@ The same flow is wrapped in [scripts/create_dummy_ts.sh](../scripts/create_dummy
 | `docker: permission denied` | Add user to `docker` group, re-login |
 | Only `h264` after TSDuck | Try `--add-pid 0x101/0x06`; check stuffing |
 | Huge file / slow encode | Use `-c:v copy -an` when source is already H.264 |
-| Do not commit `.ts` | Already covered by repo `.gitignore` (`*.ts`) |
+| Rebuild intermediates | `samples/video_only.ts` and `samples/video_pmt_klv.ts` are gitignored |
 
 ---
 
 ## What not to put in git
 
-- `*.ts` / large media - keep under `~/dummy-ts-work` (or any local path)
 - Real camera or field recordings
 - Real telemetry KLV captures (use the dummy blob above for labs)
+
+The small dummy under `samples/` is intended for this repo.
