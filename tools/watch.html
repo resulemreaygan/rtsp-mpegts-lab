@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediaMTX - watch HLS</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --ink: #1c1b19;
+      --muted: #5c574f;
+      --line: #d4cfc4;
+      --accent: #0b5fff;
+      --ok: #0f7a3a;
+      --card: #fffdf8;
+      --stage: #12110f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.45 "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 420px at 10% -10%, #ffe8c8 0%, transparent 55%),
+        radial-gradient(700px 380px at 100% 0%, #d9e8ff 0%, transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 2.5rem 1.25rem 3rem;
+    }
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 12px 40px rgba(28, 27, 25, 0.06);
+    }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    p.lead {
+      margin: 0 0 1.25rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin: 0.85rem 0 0.3rem;
+    }
+    input, button {
+      width: 100%;
+      font: inherit;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 0.65rem 0.75rem;
+      background: #fff;
+      color: var(--ink);
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 1.15rem;
+    }
+    button {
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .stage {
+      margin-top: 1.25rem;
+      background: var(--stage);
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+      object-fit: contain;
+    }
+    .badge {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.75rem;
+      z-index: 2;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: rgba(0, 0, 0, 0.65);
+      color: #fff;
+      backdrop-filter: blur(4px);
+    }
+    .badge.wait { color: #ffd37a; }
+    .badge.live { color: #7dffa8; }
+    .badge.err { color: #ffb4a8; }
+    pre {
+      margin: 1rem 0 0;
+      padding: 0.85rem;
+      border-radius: 8px;
+      background: #151513;
+      color: #f2efe8;
+      font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 3.5rem;
+    }
+    .hint {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Watch HLS</h1>
+    <p class="lead">
+      Waits until the MediaMTX path is ready (H264 track + playlist), then starts
+      playback. Pair with <a href="add-path.html">add-path.html</a>.
+    </p>
+
+    <div class="row">
+      <div>
+        <label for="api">MediaMTX API base</label>
+        <input id="api" value="http://127.0.0.1:9997" />
+      </div>
+      <div>
+        <label for="hls">HLS base</label>
+        <input id="hls" value="http://127.0.0.1:8888" />
+      </div>
+    </div>
+
+    <label for="name">Path name</label>
+    <input id="name" value="mpegts_sim" />
+
+    <div class="actions">
+      <button id="start" type="button">Wait &amp; play</button>
+      <button id="stop" class="secondary" type="button">Stop</button>
+    </div>
+
+    <div class="stage">
+      <div id="badge" class="badge wait">IDLE</div>
+      <video id="video" controls playsinline muted></video>
+    </div>
+
+    <p class="hint">
+      Do not open this file via <code>file://</code> - the browser blocks API/HLS.
+      Serve it with <code>./scripts/serve_tools.sh</code> then open
+      <code>http://127.0.0.1:8765/watch.html</code>. MediaMTX needs
+      <code>apiAllowOrigin</code> / <code>hlsAllowOrigin</code> (lab configs use <code>*</code>).
+    </p>
+    <pre id="out">Ready. Click "Wait &amp; play".</pre>
+  </main>
+
+  <script>
+    const out = document.getElementById("out");
+    const badge = document.getElementById("badge");
+    const video = document.getElementById("video");
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+
+    let timer = null;
+    let hls = null;
+    let playing = false;
+
+    function apiBase() {
+      return document.getElementById("api").value.replace(/\/$/, "");
+    }
+    function hlsBase() {
+      return document.getElementById("hls").value.replace(/\/$/, "");
+    }
+    function pathName() {
+      return document.getElementById("name").value.trim();
+    }
+    function playlistUrl() {
+      return hlsBase() + "/" + encodeURIComponent(pathName()) + "/index.m3u8";
+    }
+
+    function setBadge(text, cls) {
+      badge.textContent = text;
+      badge.className = "badge " + cls;
+    }
+
+    function log(msg, cls) {
+      const prefix = cls ? cls.toUpperCase() + ": " : "";
+      out.textContent = prefix + msg;
+    }
+
+    function stopPlayback() {
+      playing = false;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+      video.removeAttribute("src");
+      video.load();
+      startBtn.disabled = false;
+      setBadge("IDLE", "wait");
+    }
+
+    async function pathReady() {
+      const name = pathName();
+      const res = await fetch(apiBase() + "/v3/paths/get/" + encodeURIComponent(name));
+      if (!res.ok) {
+        return { ok: false, detail: "path API HTTP " + res.status };
+      }
+      const data = await res.json();
+      const tracks = data.tracks || [];
+      const hasVideo = tracks.some((t) => /H264|H265|AV1|VP9/i.test(String(t)));
+      if (!data.ready) {
+        return { ok: false, detail: "ready=false tracks=" + JSON.stringify(tracks) };
+      }
+      if (!hasVideo) {
+        return {
+          ok: false,
+          detail: "ready but no video track yet: " + JSON.stringify(tracks),
+        };
+      }
+      return { ok: true, detail: "ready tracks=" + JSON.stringify(tracks), data };
+    }
+
+    async function playlistReady() {
+      const url = playlistUrl();
+      const res = await fetch(url, { method: "GET", cache: "no-store" });
+      if (!res.ok) {
+        return { ok: false, detail: "playlist HTTP " + res.status + " - " + url };
+      }
+      const body = await res.text();
+      if (!body.includes("#EXTM3U")) {
+        return { ok: false, detail: "playlist missing #EXTM3U" };
+      }
+      return { ok: true, detail: url, body };
+    }
+
+    function startHls(url) {
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+
+      if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = url;
+        video.play().catch(() => {});
+        return;
+      }
+
+      if (!window.Hls || !Hls.isSupported()) {
+        throw new Error("HLS.js not supported in this browser");
+      }
+
+      hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: false,
+      });
+      hls.loadSource(url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().catch(() => {});
+      });
+      hls.on(Hls.Events.ERROR, (_evt, data) => {
+        if (data.fatal) {
+          setBadge("ERROR", "err");
+          log("HLS fatal: " + data.type + " / " + data.details, "err");
+        }
+      });
+    }
+
+    async function tick() {
+      try {
+        const path = await pathReady();
+        if (!path.ok) {
+          setBadge("WAITING", "wait");
+          log(path.detail);
+          return;
+        }
+
+        const pl = await playlistReady();
+        if (!pl.ok) {
+          setBadge("WAITING", "wait");
+          log(path.detail + "\n" + pl.detail);
+          return;
+        }
+
+        // Ready - start once
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+        playing = true;
+        setBadge("LIVE", "live");
+        log(path.detail + "\nPlaying " + pl.detail);
+        startHls(pl.detail);
+        startBtn.disabled = false;
+      } catch (e) {
+        setBadge("WAITING", "wait");
+        log("poll error: " + e);
+      }
+    }
+
+    function startWatch() {
+      stopPlayback();
+      startBtn.disabled = true;
+      setBadge("WAITING", "wait");
+      log("Polling until path + HLS are ready...");
+      tick();
+      timer = setInterval(() => {
+        if (!playing) tick();
+      }, 2000);
+    }
+
+    startBtn.addEventListener("click", startWatch);
+    stopBtn.addEventListener("click", () => {
+      stopPlayback();
+      log("Stopped.");
+    });
+  </script>
+</body>
+</html>

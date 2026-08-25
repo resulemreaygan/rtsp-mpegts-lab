@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediaMTX - add RTSP demux path</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --ink: #1c1b19;
+      --muted: #5c574f;
+      --line: #d4cfc4;
+      --accent: #0b5fff;
+      --ok: #0f7a3a;
+      --err: #b42318;
+      --card: #fffdf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.45 "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 420px at 10% -10%, #ffe8c8 0%, transparent 55%),
+        radial-gradient(700px 380px at 100% 0%, #d9e8ff 0%, transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 2.5rem 1.25rem 3rem;
+    }
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.5rem 1.5rem 1.25rem;
+      box-shadow: 0 12px 40px rgba(28, 27, 25, 0.06);
+    }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    p.lead {
+      margin: 0 0 1.25rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin: 0.85rem 0 0.3rem;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      font: inherit;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 0.65rem 0.75rem;
+      background: #fff;
+      color: var(--ink);
+    }
+    button {
+      margin-top: 1.15rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.05); }
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      margin-top: 0.5rem;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+    pre {
+      margin: 1rem 0 0;
+      padding: 0.85rem;
+      border-radius: 8px;
+      background: #151513;
+      color: #f2efe8;
+      font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 4rem;
+    }
+    .ok { color: var(--ok); }
+    .err { color: #ffb4a8; }
+    .hint {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Add MediaMTX path</h1>
+    <p class="lead">
+      Lab helper: create an RTSP pull path with <code>rtspDemuxMpegts</code>.
+      Talks to the MediaMTX HTTP API from your browser (CORS must allow it).
+    </p>
+
+    <label for="api">MediaMTX API base</label>
+    <input id="api" value="http://127.0.0.1:9997" />
+
+    <label for="name">Path name</label>
+    <input id="name" value="mpegts_sim" />
+
+    <label for="source">RTSP source URL</label>
+    <input id="source" value="rtsp://127.0.0.1:8555/mp2t" />
+
+    <div class="row">
+      <div>
+        <label for="transport">rtspTransport</label>
+        <select id="transport">
+          <option value="tcp" selected>tcp</option>
+          <option value="udp">udp</option>
+          <option value="automatic">automatic</option>
+        </select>
+      </div>
+      <div>
+        <label for="demux">rtspDemuxMpegts</label>
+        <select id="demux">
+          <option value="true" selected>true</option>
+          <option value="false">false</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="add" type="button">Add path</button>
+    <button id="check" class="secondary" type="button">Check path status</button>
+
+    <p class="hint">
+      Do not open via <code>file://</code>. Use <code>./scripts/serve_tools.sh</code>
+      -> <code>http://127.0.0.1:8765/add-path.html</code>. If CORS still blocks,
+      check MediaMTX <code>apiAllowOrigin</code> or use the curl examples in
+      <code>docs/mediamtx-config.md</code>.
+    </p>
+    <pre id="out">Ready.</pre>
+  </main>
+
+  <script>
+    const out = document.getElementById("out");
+
+    function payload() {
+      return {
+        source: document.getElementById("source").value.trim(),
+        rtspTransport: document.getElementById("transport").value,
+        rtspDemuxMpegts: document.getElementById("demux").value === "true",
+      };
+    }
+
+    function apiBase() {
+      return document.getElementById("api").value.replace(/\/$/, "");
+    }
+
+    function pathName() {
+      return document.getElementById("name").value.trim();
+    }
+
+    async function addPath() {
+      const name = pathName();
+      const url = apiBase() + "/v3/config/paths/add/" + encodeURIComponent(name);
+      out.textContent = "POST " + url + " ...";
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload()),
+        });
+        const text = await res.text();
+        out.innerHTML =
+          '<span class="' + (res.ok ? "ok" : "err") + '">HTTP ' + res.status + "</span>\n" +
+          (text || "(empty body)");
+      } catch (e) {
+        out.innerHTML = '<span class="err">Request failed</span>\n' + e;
+      }
+    }
+
+    async function checkPath() {
+      const name = pathName();
+      const url = apiBase() + "/v3/paths/get/" + encodeURIComponent(name);
+      out.textContent = "GET " + url + " ...";
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const summary = {
+          ready: data.ready,
+          tracks: data.tracks,
+          bytesReceived: data.bytesReceived,
+          source: data.source,
+        };
+        out.innerHTML =
+          '<span class="' + (res.ok ? "ok" : "err") + '">HTTP ' + res.status + "</span>\n" +
+          JSON.stringify(summary, null, 2);
+      } catch (e) {
+        out.innerHTML = '<span class="err">Request failed</span>\n' + e;
+      }
+    }
+
+    document.getElementById("add").addEventListener("click", addPath);
+    document.getElementById("check").addEventListener("click", checkPath);
+  </script>
+</body>
+</html>
