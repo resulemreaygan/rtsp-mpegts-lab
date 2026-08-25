@@ -1,0 +1,21 @@
+# Runtime / local artefacts
+archive/
+*.log
+*.ts
+!examples/**/*.ts
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+.DS_Store
+
+# Editor / OS
+*.swp
+*~
+.idea/
+.vscode/
+
+# Temporary FIFO / sim state
+/tmp/
+rtsp-mpegts-*/
