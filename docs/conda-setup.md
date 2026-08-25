@@ -27,6 +27,8 @@ solve often fails or hangs on older conda solvers.
 
 ```bash
 conda create -y -n rtsp-mpegts-lab python=3.10
+# Apple Silicon: conda-forge gst-rtsp-server is currently Python 3.14 only
+# conda create -y -n rtsp-mpegts-lab python=3.14
 conda activate rtsp-mpegts-lab
 
 conda install -y -c conda-forge pygobject
@@ -112,6 +114,7 @@ conda packages above.
 | Issue | Fix |
 |-------|-----|
 | `gi` / `GstRtspServer` import error | Re-activate env; reinstall `pygobject` + `gst-rtsp-server` |
+| Apple Silicon: `Namespace GstRtspServer not available` | conda-forge osx build has no GI typelib; `setup_conda_env.sh` copies the linux-64 typelib |
 | `No such element: rtpmp2tpay` | Install `gst-plugins-bad` |
 | `No such element: tsparse` | Install `gst-plugins-bad` (mpegtsparse / tsparse) |
 | Solver hangs on one big install | Install packages **sequentially** as above |
