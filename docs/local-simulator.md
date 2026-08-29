@@ -38,6 +38,9 @@ Why FIFO + `ffmpeg -re`?
 Conda env: `rtsp-mpegts-lab` (PyGObject + GStreamer bindings).
 Full install steps: [conda-setup.md](conda-setup.md) or `./scripts/setup_conda_env.sh`.
 
+Optional: run only the sim in Docker and keep MediaMTX on the host —
+[docker-simulator.md](docker-simulator.md) or `./scripts/start_rtsp_docker.sh`.
+
 ## Quick start
 
 ```bash
@@ -98,4 +101,4 @@ MP2T pull.
 | DESCRIBE hangs | Avoid `clocksync` in the RTSP factory pipeline |
 | Plays ~5-6 s then stops | Source not paced - ensure `ffmpeg -re` loop is running |
 | MTX `ready=false` | Recreate path after sim restart; confirm URL/port |
-| Port 8555 in use | Stop old `mpegts_rtsp_server.py` / supervisor |
+| Port 8555 in use | Stop old `mpegts_rtsp_server.py` / supervisor / `docker compose down` |

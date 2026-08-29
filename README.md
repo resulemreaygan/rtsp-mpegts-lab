@@ -46,6 +46,7 @@ trust the MediaMTX API `tracks` field**.
 | [docs/local-simulator.md](docs/local-simulator.md) | Lab RTSP server (ffmpeg -re + FIFO) |
 | [docs/create-dummy-ts.md](docs/create-dummy-ts.md) | Rebuild `samples/video_with_klv.ts` if needed |
 | [docs/conda-setup.md](docs/conda-setup.md) | Conda env for PyGObject / GStreamer RTSP |
+| [docs/docker-simulator.md](docs/docker-simulator.md) | Optional Docker image for the RTSP sim only |
 
 ---
 
@@ -74,7 +75,8 @@ After the upstream / fork PR is public, paste its URL into
 - Patched MediaMTX binary (with RTSP pull MPEG-TS demux)
 - Python 3 + PyGObject + GStreamer RTSP server plugins
   -> [docs/conda-setup.md](docs/conda-setup.md) or `./scripts/setup_conda_env.sh`
-- `ffmpeg` on `PATH`
+  -> or Docker for the sim only: [docs/docker-simulator.md](docs/docker-simulator.md)
+- `ffmpeg` on `PATH` (conda sim; Docker image already includes it)
 - Dummy MPEG-TS in `samples/video_with_klv.ts` (H264 + dummy KLV; rebuild via
   [docs/create-dummy-ts.md](docs/create-dummy-ts.md))
 
@@ -82,8 +84,11 @@ After the upstream / fork PR is public, paste its URL into
 
 ```bash
 # 1) MP2T RTSP source (defaults to samples/video_with_klv.ts)
+#    conda:
 export SIM_PYTHON=/path/to/python   # with gi / GstRtspServer
 ./scripts/start_rtsp_loop.sh
+#    or Docker (no conda):
+# ./scripts/start_rtsp_docker.sh
 # listens on rtsp://127.0.0.1:8555/mp2t
 
 # 2) MediaMTX (example config pulls the sim and demuxes)
@@ -154,7 +159,8 @@ Full checklist: [docs/verification.md](docs/verification.md).
 |   |-- verification.md
 |   |-- local-simulator.md
 |   |-- create-dummy-ts.md     # rebuild samples/video_with_klv.ts
-|   `-- conda-setup.md         # conda env for the RTSP simulator
+|   |-- conda-setup.md         # conda env for the RTSP simulator
+|   `-- docker-simulator.md    # optional Docker for the RTSP sim only
 |-- examples/
 |   |-- mediamtx-path.yml
 |   `-- path-config.json
@@ -162,6 +168,8 @@ Full checklist: [docs/verification.md](docs/verification.md).
 |   |-- add-path.html          # add path via MediaMTX API
 |   `-- watch.html             # wait until ready, play HLS
 |-- mpegts_rtsp_server.py      # RTSP MP2T simulator
+|-- Dockerfile                 # optional sim image (Debian + GstRtspServer)
+|-- compose.yaml
 |-- mediamtx.yml               # single-node lab config
 |-- mediamtx-node1.yml         # optional dual-node lab
 |-- mediamtx-node2.yml
@@ -175,6 +183,7 @@ Full checklist: [docs/verification.md](docs/verification.md).
     |-- serve_tools.sh         # http://127.0.0.1:8765 for HTML tools
     |-- create_dummy_ts.sh     # build video_with_klv.ts from an MP4
     |-- setup_conda_env.sh     # create conda env + GStreamer deps
+    |-- start_rtsp_docker.sh   # docker compose up for the sim
     `-- check.sh
 ```
 

@@ -7,5 +7,6 @@
 5. [Local simulator](local-simulator.md) - lab RTSP MP2T source
 6. [Create dummy TS](create-dummy-ts.md) - rebuild `samples/video_with_klv.ts`
 7. [Conda setup](conda-setup.md) - PyGObject + GStreamer env for the RTSP sim
+8. [Docker simulator](docker-simulator.md) - optional container for the RTSP sim only
 
 Start from the root [README](../README.md) for a short overview.

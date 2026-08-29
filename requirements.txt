@@ -2,6 +2,9 @@
 # Use conda-forge (PyGObject + GStreamer). See:
 #   docs/conda-setup.md
 #   ./scripts/setup_conda_env.sh
+# Or run the sim in Docker (no host GStreamer):
+#   docs/docker-simulator.md
+#   ./scripts/start_rtsp_docker.sh
 #
 # Quick version:
 #   conda create -y -n rtsp-mpegts-lab python=3.10

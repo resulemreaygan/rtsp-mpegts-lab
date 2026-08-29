@@ -6,6 +6,9 @@ plain `pip`.
 
 Recommended env name: `rtsp-mpegts-lab`.
 
+To skip conda on the host (Linux image, same `rtsp://127.0.0.1:8555/mp2t`),
+see [docker-simulator.md](docker-simulator.md).
+
 ---
 
 ## Prerequisites
@@ -103,6 +106,7 @@ export SIM_PYTHON=$HOME/miniconda3/envs/rtsp-mpegts-lab/bin/python
 |----------|--------|
 | `pip install PyGObject` | Needs matching system GStreamer / GI typelibs; fragile across distros |
 | **conda-forge** | Ships Python, GI, and GStreamer plugins together |
+| **Docker** | Debian image with the same GI stack; [docker-simulator.md](docker-simulator.md) |
 
 `requirements.txt` in this repo is intentionally minimal - the real deps are
 conda packages above.

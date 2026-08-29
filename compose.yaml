@@ -1,0 +1,16 @@
+# Optional: RTSP MP2T simulator only. MediaMTX stays on the host.
+#   docker compose up --build
+#   -> rtsp://127.0.0.1:8555/mp2t
+services:
+  sim:
+    build: .
+    image: rtsp-mpegts-lab-sim:local
+    ports:
+      - "${SIM_RTSP_PORT:-8555}:8555"
+    volumes:
+      - ./samples:/app/samples:ro
+    environment:
+      SIM_TS_PATH: /app/samples/video_with_klv.ts
+      SIM_RTSP_PORT: "8555"
+      SIM_RTSP_MOUNT: ${SIM_RTSP_MOUNT:-/mp2t}
+    init: true
