@@ -31,7 +31,7 @@ From the repo root:
 # or: docker compose up --build
 ```
 
-Then start patched MediaMTX as usual (`./scripts/start_mediamtx.sh`) and
+Then start MediaMTX as usual (`./scripts/start_mediamtx.sh`; `main` after #6181) and
 `./scripts/check.sh`.
 
 Stop: `Ctrl+C` in the compose terminal, or `docker compose down`.

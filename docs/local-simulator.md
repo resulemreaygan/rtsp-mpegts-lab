@@ -51,7 +51,7 @@ export SIM_PYTHON=$HOME/miniconda3/envs/rtsp-mpegts-lab/bin/python
 # -> rtsp://127.0.0.1:8555/mp2t
 
 # Terminal 2 - MediaMTX
-export MEDIAMTX_BIN=../mediamtx/mediamtx                   # patched binary
+export MEDIAMTX_BIN=../mediamtx/mediamtx                   # main after #6181
 ./scripts/start_mediamtx.sh
 # log: MPEG-TS demux mode enabled -> ready H264 (KLV if the TS has PES)
 

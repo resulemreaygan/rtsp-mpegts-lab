@@ -1,7 +1,8 @@
 # MediaMTX configuration
 
-Requires a MediaMTX build that implements **RTSP pull MPEG-TS demux**
-(feature flag `rtspDemuxMpegts`; example branch `feat/rtsp-pull-mpegts-demux`).
+Requires MediaMTX **`main` on or after [#6181](https://github.com/bluenviron/mediamtx/pull/6181)**
+(`c64b687`, 2026-09-05), or a release newer than `v1.20.1`.
+Flag: `rtspDemuxMpegts`.
 
 This lab's main job is to test that feature - see
 [mediamtx-feature.md](mediamtx-feature.md).

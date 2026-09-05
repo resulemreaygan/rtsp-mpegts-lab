@@ -7,8 +7,8 @@ Lab harness for **RTSP sources that publish a single MPEG-TS mux track**
 
 | | |
 |--|--|
-| **Primary** | Test / demonstrate the MediaMTX feature **`rtspDemuxMpegts`** on **RTSP pull** (branch name commonly `feat/rtsp-pull-mpegts-demux`, intended for [bluenviron/mediamtx](https://github.com/bluenviron/mediamtx)). See **[docs/mediamtx-feature.md](docs/mediamtx-feature.md)**. |
-| **Also fine** | Use as a generic MP2T RTSP simulator + example configs once that feature exists in your MediaMTX build (fork, PR build, or future upstream release). |
+| **Primary** | Test / demonstrate **`rtspDemuxMpegts` on RTSP pull**, merged to [bluenviron/mediamtx](https://github.com/bluenviron/mediamtx) `main` in [#6181](https://github.com/bluenviron/mediamtx/pull/6181). See **[docs/mediamtx-feature.md](docs/mediamtx-feature.md)**. |
+| **Also fine** | Generic MP2T RTSP simulator + example configs against any MediaMTX that implements the flag (`main` after 2026-09-05, or a later release). |
 
 Without a MediaMTX build that implements the flag, you can still reproduce the
 **pre-fix** behaviour (pull works, HLS 404 / `tracks: ["MPEG-TS"]`).
@@ -63,8 +63,7 @@ MediaMTX log line that confirms demux:
 [RTSP source] MPEG-TS demux mode enabled
 ```
 
-After the upstream / fork PR is public, paste its URL into
-[docs/mediamtx-feature.md](docs/mediamtx-feature.md) (section "PR / commit links").
+Upstream pointers (issue, PR, commits): [docs/mediamtx-feature.md](docs/mediamtx-feature.md).
 
 ---
 
@@ -72,7 +71,7 @@ After the upstream / fork PR is public, paste its URL into
 
 ### Prerequisites
 
-- Patched MediaMTX binary (with RTSP pull MPEG-TS demux)
+- MediaMTX built from `main` on or after [#6181](https://github.com/bluenviron/mediamtx/pull/6181) (`c64b687`), or a release newer than `v1.20.1`
 - Python 3 + PyGObject + GStreamer RTSP server plugins
   -> [docs/conda-setup.md](docs/conda-setup.md) or `./scripts/setup_conda_env.sh`
   -> or Docker for the sim only: [docs/docker-simulator.md](docs/docker-simulator.md)
@@ -92,7 +91,7 @@ export SIM_PYTHON=/path/to/python   # with gi / GstRtspServer
 # listens on rtsp://127.0.0.1:8555/mp2t
 
 # 2) MediaMTX (example config pulls the sim and demuxes)
-export MEDIAMTX_BIN=/path/to/patched/mediamtx
+export MEDIAMTX_BIN=/path/to/mediamtx   # main after #6181, not v1.20.1
 ./scripts/start_mediamtx.sh
 
 # 3) Verify
@@ -131,7 +130,7 @@ MediaMTX lab configs set `apiAllowOrigin` / `hlsAllowOrigin` to `*` so these pag
 
 ## Production usage (summary)
 
-1. Deploy patched MediaMTX.
+1. Deploy MediaMTX from `main` after [#6181](https://github.com/bluenviron/mediamtx/pull/6181), or a release newer than `v1.20.1`.
 2. Set `rtspDemuxMpegts: true` on MP2T RTSP pull paths (YAML or API).
 3. **Recreate** the path if it was created with an older config/binary.
 4. Confirm API `tracks` includes `H264` and HLS returns 200.

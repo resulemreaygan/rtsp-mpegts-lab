@@ -1,4 +1,4 @@
-# Minimal MediaMTX path example (patched build required).
+# Minimal MediaMTX path example (needs main after #6181, not v1.20.1).
 # Apply via API or merge under `paths:` in mediamtx.yml.
 
 pathDefaults:

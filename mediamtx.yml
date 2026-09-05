@@ -1,6 +1,6 @@
 ###############################################
 # Local PoC: pull RTSP MPEG-TS (MP2T) and demux
-# Requires patched MediaMTX (feat/rtsp-pull-mpegts-demux)
+# Needs MediaMTX main after #6181 (not v1.20.1)
 ###############################################
 
 logLevel: info

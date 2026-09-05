@@ -25,8 +25,7 @@ watch / verify scripts             -> HLS 200
 | Item | Value |
 |------|--------|
 | Config / API flag | `rtspDemuxMpegts` (boolean, path-level) |
-| Typical branch name | `feat/rtsp-pull-mpegts-demux` |
-| Intended upstream | [bluenviron/mediamtx](https://github.com/bluenviron/mediamtx) |
+| Upstream | [bluenviron/mediamtx](https://github.com/bluenviron/mediamtx) **`main`** (merged 2026-09-05; not in `v1.20.1`) |
 | Behaviour | When `true` and the RTSP source has a **single MPEG-TS** format, demux RTP payloads with the same MPEG-TS pipeline used for UDP/SRT sources |
 
 ### Success signal in MediaMTX
@@ -37,19 +36,23 @@ watch / verify scripts             -> HLS 200
 
 API: `paths/get` -> `tracks` includes `H264` (not only `MPEG-TS`).
 
-### PR / commit links (fill when published)
+### Issue / PR / commit
 
-Update these when the public PR exists so this lab stays tied to the change:
+The pull-side gap was filed as [#6138](https://github.com/bluenviron/mediamtx/issues/6138).
+The implementation landed in [#6181](https://github.com/bluenviron/mediamtx/pull/6181)
+(rebase of the branch linked from that issue; squash-merged to `main`).
 
 | Link | URL |
 |------|-----|
-| Upstream PR (bluenviron) | _TBD - paste after opening_ |
-| Feature branch / fork | _e.g. `.../tree/feat/rtsp-pull-mpegts-demux`_ |
-| Feature commit | _e.g. rewritten public commit hash_ |
+| Issue | https://github.com/bluenviron/mediamtx/issues/6138 |
+| Upstream PR | https://github.com/bluenviron/mediamtx/pull/6181 |
+| On `main` (squash) | [`c64b687`](https://github.com/bluenviron/mediamtx/commit/c64b687ac03cb9cc8e07932b20f4826d4dcff082) — author michalfita; `Co-authored-by: remreaygan` |
+| Original commit (PR history) | [`0d21d506`](https://github.com/bluenviron/mediamtx/commit/0d21d5063e1bc7a11a71914f36ab3ddd97c76d85) — `rtsp: demux MPEG-TS from static source pull` |
+| Working branch (this account) | https://github.com/resulemreaygan/mediamtx/tree/feat/rtsp-pull-mpegts-demux |
 
-Without a patched MediaMTX (flag ignored / missing), this lab will show the
-**old** failure mode: pull OK, `tracks: ["MPEG-TS"]`, HLS 404 - which is still
-useful as a before/after demo.
+Build MediaMTX from `main` on or after `c64b687`, or wait for the first release after `v1.20.1`.
+A stock `v1.20.1` binary still shows the **old** failure mode: pull OK,
+`tracks: ["MPEG-TS"]`, HLS 404 — useful as a before/after demo.
 
 ---
 
@@ -66,7 +69,7 @@ paths:
 | Flag | Expected lab result |
 |------|---------------------|
 | `rtspDemuxMpegts: false` (or stock MediaMTX) | `tracks: ["MPEG-TS"]`, HLS often 404 |
-| `rtspDemuxMpegts: true` (patched build) | `tracks` has `H264`, HLS 200 |
+| `rtspDemuxMpegts: true` (`main` ≥ `c64b687`) | `tracks` has `H264`, HLS 200 |
 
 Verification steps: [verification.md](verification.md).
 

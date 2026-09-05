@@ -96,7 +96,7 @@ is present on the path.
 
 ## Known operational pitfalls
 
-1. **Stale path** - create/replace path after deploying the patched binary.
+1. **Stale path** - create/replace path after deploying a binary that includes #6181.
 2. **Bursting lab source** - a file-based RTSP sim that dumps TS faster than
    realtime will look "alive" for a few seconds then stall; pace with
    `ffmpeg -re` (this repo's simulator).
