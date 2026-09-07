@@ -1,7 +1,7 @@
 # MediaMTX configuration
 
-Requires MediaMTX **`main` on or after [#6181](https://github.com/bluenviron/mediamtx/pull/6181)**
-(`c64b687`, 2026-09-05), or a release newer than `v1.20.1`.
+Requires MediaMTX **[v1.21.0](https://github.com/bluenviron/mediamtx/releases/tag/v1.21.0)** or later
+(or `main` after [#6181](https://github.com/bluenviron/mediamtx/pull/6181)).
 Flag: `rtspDemuxMpegts`.
 
 This lab's main job is to test that feature - see
