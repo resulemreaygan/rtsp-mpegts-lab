@@ -1,0 +1,19 @@
+# Upstream role (encoder / media server): receives the simulated stream and only relays it.
+# No HLS / recording here, so no DTS extraction happens on this node.
+logLevel: info
+api: true
+apiAddress: :9997
+rtsp: true
+rtspTransports: [tcp]
+rtspAddress: :8554
+rtpAddress: :8000
+rtcpAddress: :8001
+rtmp: false
+hls: false
+webrtc: false
+srt: false
+moq: false
+
+paths:
+  upstream:
+    source: publisher

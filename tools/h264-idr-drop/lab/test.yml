@@ -1,0 +1,27 @@
+# Node under test: pulls the stream from the upstream node, like a typical deployment,
+# and runs HLS muxing and recording, which both use the DTS extractor.
+logLevel: info
+api: true
+apiAddress: :9998
+rtsp: true
+rtspTransports: [tcp]
+rtspAddress: :8654
+rtpAddress: :8100
+rtcpAddress: :8101
+rtmp: false
+hls: true
+hlsAddress: :8888
+hlsAllowOrigins: ['*']
+hlsAlwaysRemux: true
+webrtc: false
+srt: false
+moq: false
+
+paths:
+  test:
+    source: rtsp://localhost:8554/upstream
+    sourceOnDemand: false
+    rtspTransport: tcp
+    record: true
+    recordPath: /tmp/h264-idr-drop-rec/%path/%Y-%m-%d_%H-%M-%S-%f
+    recordFormat: fmp4

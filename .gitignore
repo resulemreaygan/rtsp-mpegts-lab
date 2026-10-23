@@ -27,3 +27,7 @@ rtsp-mpegts-*/
 # MediaMTX auto-generated TLS when started from the lab root
 /auto.crt
 /auto.key
+
+# h264-idr-drop build output and media
+tools/h264-idr-drop/h264-idr-drop
+*.h264

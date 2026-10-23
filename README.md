@@ -56,6 +56,7 @@ trust the MediaMTX API `tracks` field**.
 |-----------|------|
 | **MediaMTX** (feature under test) | `rtspDemuxMpegts` on RTSP pull - see [docs/mediamtx-feature.md](docs/mediamtx-feature.md) |
 | **This repo** | Docs + MP2T RTSP simulator + examples to validate that feature |
+| [tools/h264-idr-drop](tools/h264-idr-drop/README.md) | Separate lab tool: publishes H264 (POC type 0, no B-frames) while dropping IDRs, to reproduce DTS extraction crashes |
 
 MediaMTX log line that confirms demux:
 
@@ -165,7 +166,8 @@ Full checklist: [docs/verification.md](docs/verification.md).
 |   `-- path-config.json
 |-- tools/
 |   |-- add-path.html          # add path via MediaMTX API
-|   `-- watch.html             # wait until ready, play HLS
+|   |-- watch.html             # wait until ready, play HLS
+|   `-- h264-idr-drop/         # H264 IDR-drop publisher (DTS extractor lab)
 |-- mpegts_rtsp_server.py      # RTSP MP2T simulator
 |-- Dockerfile                 # optional sim image (Debian + GstRtspServer)
 |-- compose.yaml
